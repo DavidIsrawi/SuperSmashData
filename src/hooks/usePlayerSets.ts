@@ -4,9 +4,9 @@ import { GET_PLAYER_SETS } from '../queries/player';
 import { getCache, setCache } from '../api/cache';
 import { GetPlayerSetsQuery, GetPlayerSetsQueryVariables } from '../gql/graphql';
 
-type SetNode = NonNullable<NonNullable<NonNullable<GetPlayerSetsQuery['player']>['sets']>['nodes']>[number];
+type SetNode = NonNullable<NonNullable<NonNullable<NonNullable<GetPlayerSetsQuery['player']>['sets']>['nodes']>[number]>;
 
-export const usePlayerSets = (playerId: string | undefined, totalSetsNeeded: number = 300) => {
+export const usePlayerSets = (playerId: string | null | undefined, totalSetsNeeded: number = 300) => {
   const [sets, setSets] = useState<SetNode[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<any>(null);

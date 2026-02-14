@@ -1,5 +1,4 @@
 import React from "react";
-import { Tournament, TournamentImage } from "./api/types";
 import { useTournamentsByState } from "./hooks/useTournamentsByState";
 import './styles/TournamentsInState.css';
 
@@ -19,15 +18,15 @@ export const TournamentsInState = () => {
                 <h1>Tournaments in WA</h1>
             </header>
             <div className="tournaments-section">
-                {tournaments.map((tournament: Tournament) => (
+                {tournaments.map((tournament: any) => (
                     <div key={tournament.id} data-slug={tournament.slug} className="tournament-card">
                         <div className="tournament-image-container">
-                            <img src={tournament.images.filter((image: TournamentImage) => image.type === 'profile')[0].url} alt={tournament.name} />
+                            <img src={tournament.images?.find((image: any) => image.type === 'profile')?.url || tournament.images?.[0]?.url} alt={tournament.name} />
                         </div>
                         <div className="tournament-info">
                             <h3>{tournament.name}</h3>
-                            <p>{`Attendees: ${tournament.numAttendees}`}</p>
-                            <p>{new Date(tournament.startAt * 1000).toDateString()}</p>
+                            <p>{`Attendees: ${tournament.numAttendees || 0}`}</p>
+                            <p>{tournament.startAt ? new Date(tournament.startAt * 1000).toDateString() : 'Date TBD'}</p>
                             <a href={getStartggLink(tournament.slug)} className="tournament-link">View on Start.gg</a>
                         </div>
                     </div>

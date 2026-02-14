@@ -3,49 +3,6 @@ import { usePlayerSets } from './hooks/usePlayerSets';
 import { useCurrentUser } from './hooks/useCurrentUser';
 import './styles/Performance.css';
 
-interface SetNode {
-  id: string;
-  fullRoundText: string;
-  displayScore: string | null;
-  totalGames: number | null;
-  winnerId: number;
-  completedAt: number | null;
-  event: {
-    id: string;
-    name: string;
-    tournament: {
-      id: string;
-      name: string;
-    } | null;
-  } | null;
-  games: {
-    id: string;
-    selections: {
-      entrant: {
-        id: number;
-      } | null;
-      selectionType: string;
-      selectionValue: number;
-    }[] | null;
-  }[] | null;
-  slots: {
-    entrant: {
-      id: number;
-      name: string;
-      participants: {
-        id: number;
-        gamerTag: string;
-        user: {
-          id: number;
-        } | null;
-        player: {
-          id: number;
-        } | null;
-      }[] | null;
-    } | null;
-  }[];
-}
-
 export const Performance = () => {
   const { userData, loading: userLoading } = useCurrentUser();
   const playerId = userData?.currentUser?.player?.id;
@@ -66,13 +23,13 @@ export const Performance = () => {
     const pId = playerId.toString();
     const uId = userId?.toString();
 
-    sets.forEach((set: SetNode) => {
+    sets.forEach((set: any) => {
       const round = set.fullRoundText;
       
       // Identify the user's slot and the opponent's slot
       let userSlotIndex = -1;
-      set.slots.forEach((slot, index) => {
-        const isUser = slot.entrant?.participants?.some(p => 
+      set.slots.forEach((slot: any, index: number) => {
+        const isUser = slot.entrant?.participants?.some((p: any) => 
           p.player?.id?.toString() === pId || (uId && p.user?.id?.toString() === uId)
         );
         if (isUser) userSlotIndex = index;
@@ -84,7 +41,7 @@ export const Performance = () => {
       if (!userEntrant) return;
 
       const isWinner = set.winnerId?.toString() === userEntrant.id.toString();
-      const opponentSlot = set.slots.find((_, index) => index !== userSlotIndex);
+      const opponentSlot = set.slots.find((_: any, index: number) => index !== userSlotIndex);
       const opponentName = opponentSlot?.entrant?.name || 'Unknown';
 
       // Recent Form (last 10)
@@ -209,7 +166,7 @@ export const Performance = () => {
   return (
     <main className="performance-container">
       <header className="performance-header">
-        <h1>Performance Analysis: {userData.currentUser.player.gamerTag}</h1>
+        <h1>Performance Analysis: {userData?.currentUser?.player?.gamerTag}</h1>
         <span className="subtitle">Last {sets.length} Sets</span>
       </header>
 

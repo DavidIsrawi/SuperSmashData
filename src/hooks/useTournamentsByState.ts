@@ -5,7 +5,7 @@ import { getCache, setCache } from '../api/cache';
 import { TournamentsByStateQuery, TournamentsByStateQueryVariables } from '../gql/graphql';
 import { SMASH_ULTIMATE_ID } from '../api/constants';
 
-type TournamentNode = NonNullable<NonNullable<TournamentsByStateQuery['tournaments']>['nodes']>[number];
+type TournamentNode = NonNullable<NonNullable<NonNullable<TournamentsByStateQuery['tournaments']>['nodes']>[number]>;
 
 export const useTournamentsByState = (state: string, perPage: number = 10) => {
     const [tournaments, setTournaments] = useState<TournamentNode[]>([]);
