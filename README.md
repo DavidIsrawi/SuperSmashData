@@ -28,7 +28,7 @@ SuperSmashData is a performance-focused dashboard for Super Smash Bros. competit
 ### Prerequisites
 
 - Node.js and Yarn/npm
-- A start.gg API Token (configured in `src/api/secrets.ts`)
+- A start.gg API Token (configured in `.env`)
 
 ### Installation
 
@@ -43,9 +43,9 @@ SuperSmashData is a performance-focused dashboard for Super Smash Bros. competit
    yarn install
    ```
 
-3. Create a `src/api/secrets.ts` file and add your start.gg token:
-   ```typescript
-   export const AUTHORIZATION_TOKEN = "Bearer YOUR_TOKEN_HERE";
+3. Create a `.env` file and add your start.gg token:
+   ```env
+   STARTGG_TOKEN="Bearer YOUR_TOKEN_HERE"
    ```
 
 4. Start the development server:

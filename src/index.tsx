@@ -5,7 +5,6 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { ApolloClient, InMemoryCache, ApolloProvider, ApolloLink, HttpLink } from '@apollo/client';
 import { URL_GRAPH } from './api/constants';
-import { AUTHORIZATION_TOKEN } from './api/secrets';
 
 const httpLink = new HttpLink({ uri: URL_GRAPH });
 
@@ -14,7 +13,7 @@ const authLink = new ApolloLink((operation, forward) => {
   // Use the setContext method to set the HTTP headers.
   operation.setContext({
     headers: {
-      authorization: AUTHORIZATION_TOKEN
+      authorization: process.env.STARTGG_TOKEN
     }
   });
 
