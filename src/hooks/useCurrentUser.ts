@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { useApolloClient } from '@apollo/client';
 import { GET_CURRENT_USER } from '../queries/player';
 import { getCache, setCache } from '../api/cache';
+import { GetCurrentUserQuery } from '../gql/graphql';
 
 export const useCurrentUser = () => {
-  const [userData, setUserData] = useState<any>(null);
+  const [userData, setUserData] = useState<GetCurrentUserQuery | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<any>(null);
   const client = useApolloClient();
@@ -12,7 +13,7 @@ export const useCurrentUser = () => {
   useEffect(() => {
     const fetchUser = async () => {
       const cacheKey = 'current-user';
-      const cachedData = getCache<any>(cacheKey);
+      const cachedData = getCache<GetCurrentUserQuery>(cacheKey);
 
       if (cachedData) {
         setUserData(cachedData);
@@ -23,7 +24,7 @@ export const useCurrentUser = () => {
       setError(null);
 
       try {
-        const { data } = await client.query({
+        const { data } = await client.query<GetCurrentUserQuery>({
           query: GET_CURRENT_USER,
         });
         setUserData(data);

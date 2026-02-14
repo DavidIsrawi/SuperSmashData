@@ -1,14 +1,13 @@
 import {gql} from '@apollo/client';
-import { SMASH_ULTIMATE_ID } from '../api/constants';
 
 export const GET_TOURNAMENTS = gql`
-query TournamentsByState($perPage: Int, $state: String!) {
+query TournamentsByState($perPage: Int, $state: String!, $videogameId: ID!) {
         tournaments(query: {
         perPage: $perPage
         filter: {
             addrState: $state
             upcoming: true
-            videogameIds: [${SMASH_ULTIMATE_ID}]
+            videogameIds: [$videogameId]
         }
         sortBy: "startAt asc"
         }) {

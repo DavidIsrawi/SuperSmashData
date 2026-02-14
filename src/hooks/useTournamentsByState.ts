@@ -2,9 +2,13 @@ import { useState, useEffect } from 'react';
 import { useApolloClient } from "@apollo/client";
 import { GET_TOURNAMENTS } from "../queries/tournaments";
 import { getCache, setCache } from '../api/cache';
+import { TournamentsByStateQuery, TournamentsByStateQueryVariables } from '../gql/graphql';
+import { SMASH_ULTIMATE_ID } from '../api/constants';
 
-export const useTournamentsByState = (state: string, perPage: string = '10') => {
-    const [tournaments, setTournaments] = useState<any[]>([]);
+type TournamentNode = NonNullable<NonNullable<TournamentsByStateQuery['tournaments']>['nodes']>[number];
+
+export const useTournamentsByState = (state: string, perPage: number = 10) => {
+    const [tournaments, setTournaments] = useState<TournamentNode[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<any>(null);
     const client = useApolloClient();
@@ -12,7 +16,7 @@ export const useTournamentsByState = (state: string, perPage: string = '10') => 
     useEffect(() => {
         const fetchTournaments = async () => {
             const cacheKey = `tournaments-${state}-${perPage}`;
-            const cachedData = getCache<any[]>(cacheKey);
+            const cachedData = getCache<TournamentNode[]>(cacheKey);
 
             if (cachedData) {
                 setTournaments(cachedData);
@@ -23,12 +27,16 @@ export const useTournamentsByState = (state: string, perPage: string = '10') => 
             setError(null);
 
             try {
-                const { data } = await client.query({
+                const { data } = await client.query<TournamentsByStateQuery, TournamentsByStateQueryVariables>({
                     query: GET_TOURNAMENTS,
-                    variables: { state, perPage },
+                    variables: { 
+                        state, 
+                        perPage,
+                        videogameId: SMASH_ULTIMATE_ID
+                    },
                 });
 
-                const nodes = data?.tournaments?.nodes || [];
+                const nodes = (data?.tournaments?.nodes || []).filter((n): n is TournamentNode => !!n);
                 setTournaments(nodes);
                 setCache(cacheKey, nodes);
             } catch (err) {
